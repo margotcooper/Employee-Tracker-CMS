@@ -1,0 +1,24 @@
+{
+  "name": "12_employee-tracker-cms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/margotcooper/Employee-Tracker-CMS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/margotcooper/Employee-Tracker-CMS/issues"
+  },
+  "homepage": "https://github.com/margotcooper/Employee-Tracker-CMS#readme",
+  "dependencies": {
+    "inquirer": "8.0.0",
+    "mysql2": "^2.3.3"
+  }
+}
