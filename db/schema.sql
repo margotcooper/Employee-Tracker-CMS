@@ -24,9 +24,7 @@ CREATE TABLE employees(
     last_name VARCHAR(30) NOT NULL,
     employee_role INT,
     FOREIGN KEY(employee_role) REFERENCES roles(id),
-    employee_department VARCHAR(30),
-    FOREIGN KEY(employee_department) REFERENCES departments(id),
-    employee_salary INT,
-    FOREIGN KEY(employee_salary) REFERENCES roles(salary),
-    reporting_manager VARCHAR(60)
+    reporting_manager INT, FOREIGN KEY(reporting_manager) REFERENCES employees(id)
 );
+
+--have manager id reference employees table

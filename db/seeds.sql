@@ -12,6 +12,7 @@ VALUES("Salesperson", 90000, 2),
 ("Engineer", 80000, 3),
 ("DevOps", 70000, 1);
 
-INSERT INTO employees(first_name, last_name, employee_role, employee_department, employee_salary, reporting_manager)
-VALUES("Sally", "Smith", 2)
+INSERT INTO employees(first_name, last_name, employee_role, reporting_manager)
+VALUES("Sally", "Smith", 2, 3);
 -- how do I insert all the foreign keys into the values part of line 16 (role, dept, salary)
+-- don't need employee_role or employee_department, just need ID for role.

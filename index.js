@@ -47,6 +47,12 @@ function startApp() {
         queryRoles();
       } else if (ansObj.choice == "View All Employees") {
         queryEmployees();
+      } else if (ansObj.choice == "Add a Department") {
+        //use inquirer to ask questions to user, then add to database. Example - Module 9 Activity 19
+        addDept();
+      } else if (ansObj.choice == "Add a Role") {
+      } else if (ansObj.choice == "Add an Employee") {
+      } else if (ansObj.choice == "Update an Employee Role") {
       } else {
         //this 'else' catch-all will catch if they select exit
         process.exit(0);
@@ -94,4 +100,16 @@ function queryEmployees() {
     console.log("\n");
     startApp();
   });
+}
+
+function addDept() {
+  inquirer.prompt([
+    {
+      type: "input",
+      message: "What is the new department name?",
+      name: "newDept",
+    },
+  ]);
+  //get user info
+  //then use sequel to insert into database Module 12 Activity 28 - server.js file lines 27-30
 }
