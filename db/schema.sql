@@ -22,9 +22,11 @@ CREATE TABLE employees(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    -- for the next 4 options, did not do 'NOT NULL' because they could be empty at first
-    employee_title VARCHAR(30),
+    employee_role INT,
+    FOREIGN KEY(employee_role) REFERENCES roles(id),
     employee_department VARCHAR(30),
+    FOREIGN KEY(employee_department) REFERENCES departments(id),
     employee_salary INT,
+    FOREIGN KEY(employee_salary) REFERENCES roles(salary),
     reporting_manager VARCHAR(60)
 );

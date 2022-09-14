@@ -42,3 +42,5 @@ const db = mysql.createConnection({
 });
 
 module.exports = db;
+
+//just a set of instructions to connect files, but need index to connect (see lines 18-22 of index.js)
