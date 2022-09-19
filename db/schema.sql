@@ -27,4 +27,4 @@ CREATE TABLE employees(
     reporting_manager INT, FOREIGN KEY(reporting_manager) REFERENCES employees(id)
 );
 
---have manager id reference employees table
+-- have manager id reference employees table

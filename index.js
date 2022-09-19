@@ -51,8 +51,11 @@ function startApp() {
         //use inquirer to ask questions to user, then add to database. Example - Module 9 Activity 19
         addDept();
       } else if (ansObj.choice == "Add a Role") {
+        addRole();
       } else if (ansObj.choice == "Add an Employee") {
+        addEmployee();
       } else if (ansObj.choice == "Update an Employee Role") {
+        updateEmployeeRole();
       } else {
         //this 'else' catch-all will catch if they select exit
         process.exit(0);
@@ -109,7 +112,63 @@ function addDept() {
       message: "What is the new department name?",
       name: "newDept",
     },
-  ]);
+  ]).then((response) => {
+    const sql = `INSERT INTO departments (department_name) VALUES (newDept)`;
+    const params [body.department_name];
+  }
+  //add to table like in activity 28, module 12
+
+  );
   //get user info
   //then use sequel to insert into database Module 12 Activity 28 - server.js file lines 27-30
+};
+
+function addRole() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the new role name?",
+            name: "newRole",
+        },
+        {
+            type: "input",
+            message: "What is the salary for this role?",
+            name: "salary",
+        },
+        {
+            type: "list",
+            message: "What department is this new role under?",
+            name: "deptOver",
+            //how do I add the existing departments as choices here for the new role?
+            choices: "",
+        }
+    ]).then(response) => {
+      const sql = `INSERT INTO roles (job_title) VALUES (newRole)`;
+      //how do I add the three values into the data table?
+      const params [body.job_title];
+    }
+};
+
+function addEmployee() {
+  inquirer.prompt([
+  {
+    type: "input",
+    message: "What is the new employee's first name?",
+    name: "newFirstName",
+},
+{
+    type: "input",
+    message: "What is the new employee's last name?",
+    name: "newLastName",
+},
+//need to add here the list of roles as options
+{
+  type: "input",
+  message: "Who is the new employee's reporting manager?",
+  name: "reportingMgr",
+},
+]);
+
+function updateEmployeeRole() {
+  `DELETE FROM employees WHERE id = ${}`
 }
