@@ -106,69 +106,104 @@ function queryEmployees() {
 }
 
 function addDept() {
-  inquirer.prompt([
-    {
-      type: "input",
-      message: "What is the new department name?",
-      name: "newDept",
-    },
-  ]).then((response) => {
-    const sql = `INSERT INTO departments (department_name) VALUES (newDept)`;
-    const params [body.department_name];
-  }
-  //add to table like in activity 28, module 12
-
-  );
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the new department name?",
+        name: "newDept",
+      },
+    ])
+    .then(
+      (response) => {
+        const sql = `INSERT INTO departments (department_name) VALUES (?)`;
+        db.query(sql, [response.newDept], (err, data) => {
+          if (err) throw err;
+          console.log("added new department");
+          console.log(data);
+          startApp();
+        });
+      }
+      //add to table like in activity 28, module 12
+    );
   //get user info
   //then use sequel to insert into database Module 12 Activity 28 - server.js file lines 27-30
-};
+}
 
-function addRole() {
-    inquirer.prompt([
-        {
-            type: "input",
-            message: "What is the new role name?",
-            name: "newRole",
-        },
-        {
-            type: "input",
-            message: "What is the salary for this role?",
-            name: "salary",
-        },
-        {
-            type: "list",
-            message: "What department is this new role under?",
-            name: "deptOver",
-            //how do I add the existing departments as choices here for the new role?
-            choices: "",
+function loadDept() {
+  return db.promise().query("SELECT * FROM departments");
+}
+
+async function addRole() {
+  var [rows] = await loadDept();
+
+  var structuredList = rows.map((index) => ({
+    name: index.department_name,
+    value: index.id,
+  }));
+
+  console.log(rows);
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the new role name?",
+        name: "newRole",
+      },
+      {
+        type: "input",
+        message: "What is the salary for this role?",
+        name: "salary",
+      },
+      {
+        type: "list",
+        message: "What department is this new role under?",
+        name: "deptOver",
+        //how do I add the existing departments as choices here for the new role?
+        choices: structuredList,
+      },
+    ])
+    .then((response) => {
+      const sql = `INSERT INTO roles (job_title, salary, department_id) 
+      VALUES (?, ?, ?)`;
+
+      db.query(
+        sql,
+        [response.newRole, response.salary, response.deptOver],
+        (err, data) => {
+          if (err) throw err;
+          console.log("added role");
+          startApp();
         }
-    ]).then(response) => {
-      const sql = `INSERT INTO roles (job_title) VALUES (newRole)`;
+      );
+
       //how do I add the three values into the data table?
-      const params [body.job_title];
-    }
-};
+      // const params [body.job_title];
+    });
+}
 
 function addEmployee() {
   inquirer.prompt([
-  {
-    type: "input",
-    message: "What is the new employee's first name?",
-    name: "newFirstName",
-},
-{
-    type: "input",
-    message: "What is the new employee's last name?",
-    name: "newLastName",
-},
-//need to add here the list of roles as options
-{
-  type: "input",
-  message: "Who is the new employee's reporting manager?",
-  name: "reportingMgr",
-},
-]);
-
-function updateEmployeeRole() {
-  `DELETE FROM employees WHERE id = ${}`
+    {
+      type: "input",
+      message: "What is the new employee's first name?",
+      name: "newFirstName",
+    },
+    {
+      type: "input",
+      message: "What is the new employee's last name?",
+      name: "newLastName",
+    },
+    //need to add here the list of roles as options
+    {
+      type: "input",
+      message: "Who is the new employee's reporting manager?",
+      name: "reportingMgr",
+    },
+  ]);
 }
+
+// function updateEmployeeRole() {
+//   `DELETE FROM employees WHERE id = ${}`
+// don't need to delete, just need to update.
+// }
