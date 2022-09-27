@@ -91,9 +91,9 @@ function queryRoles() {
 
 function queryEmployees() {
   const sqlQuery = `
-      SELECT first_name, last_name, employee_role
+      SELECT first_name, last_name, job_title
       FROM employees
-      JOIN roles
+      LEFT JOIN roles
       ON employee_role = roles.id`;
 
   db.query(sqlQuery, (err, data) => {
@@ -119,7 +119,7 @@ function addDept() {
         const sql = `INSERT INTO departments (department_name) VALUES (?)`;
         db.query(sql, [response.newDept], (err, data) => {
           if (err) throw err;
-          console.log("added new department");
+          console.log("Added new department");
           console.log(data);
           startApp();
         });
@@ -142,7 +142,6 @@ async function addRole() {
     value: index.id,
   }));
 
-  console.log(rows);
   inquirer
     .prompt([
       {
@@ -182,28 +181,126 @@ async function addRole() {
     });
 }
 
-function addEmployee() {
-  inquirer.prompt([
-    {
-      type: "input",
-      message: "What is the new employee's first name?",
-      name: "newFirstName",
-    },
-    {
-      type: "input",
-      message: "What is the new employee's last name?",
-      name: "newLastName",
-    },
-    //need to add here the list of roles as options
-    {
-      type: "input",
-      message: "Who is the new employee's reporting manager?",
-      name: "reportingMgr",
-    },
-  ]);
+function loadRoles() {
+  return db.promise().query("SELECT * FROM roles");
 }
 
-// function updateEmployeeRole() {
+function loadEmployees() {
+  return db.promise().query("SELECT * FROM employees");
+}
+
+async function addEmployee() {
+  var [rows] = await loadRoles();
+
+  var existingRoles = rows.map((index) => ({
+    name: index.job_title,
+    value: index.id,
+  }));
+  console.log(rows);
+
+  var [rows] = await loadEmployees();
+  var existingEmployees = rows.map((index) => ({
+    name: index.first_name + " " + index.last_name,
+    value: index.id,
+  }));
+  console.log(rows);
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the new employee's first name?",
+        name: "newFirstName",
+      },
+      {
+        type: "input",
+        message: "What is the new employee's last name?",
+        name: "newLastName",
+      },
+      {
+        type: "list",
+        message: "What role does the employee have?",
+        name: "employeeRole",
+        choices: existingRoles,
+      },
+      //need to add here the list of roles as options
+      //show list of ids and employees, user gives id number.
+      //console.table - view all employees
+      {
+        type: "list",
+        message: "What is the id of the new employee's reporting manager?",
+        name: "reportingMgr",
+        choices: existingEmployees,
+      },
+    ])
+    .then(
+      (response) => {
+        const sql = `INSERT INTO employees (first_name, last_name, employee_role, reporting_manager) 
+    VALUES (?, ?, ?, ?)`;
+
+        db.query(
+          sql,
+          [
+            response.newFirstName,
+            response.newLastName,
+            response.employeeRole,
+            response.reportingMgr,
+          ],
+          (err, data) => {
+            if (err) throw err;
+            console.log("added Employee");
+            startApp();
+          }
+        );
+      }
+
+      //how do I add the three values into the data table?
+      // const params [body.job_title];
+    );
+}
+//need help with updating employee role
+
+async function updateEmployeeRole() {
+  var [rows] = await loadRoles();
+  var existingRoles = rows.map((index) => ({
+    name: index.job_title,
+    value: index.id,
+  }));
+
+  var [rows] = await loadEmployees();
+  var existingEmployees = rows.map((index) => ({
+    name: `${index.first_name} ${index.last_name}`,
+    value: index.id,
+  }));
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "Who is the employee in a new role?",
+        name: "empName",
+        choices: existingEmployees,
+      },
+      {
+        type: "list",
+        message: "What is the new role for the employee?",
+        name: "newEmpDept",
+        choices: existingRoles,
+      },
+    ])
+    .then((response) => {
+      const sql = `UPDATE employees SET employee_role = newEmpDept WHERE empName = first_name AND last_name`;
+      db.query(sql, [response.changeEmpDept], (err, data) => {
+        if (err) throw err;
+        console.log("Changed employee's department.");
+        console.log(data);
+        startApp();
+      });
+    });
+}
+//       //add to table like in activity 28, module 12
+//     );
+//   //get user info
+//   //then use sequel to insert into database Module 12 Activity 28 - server.js file lines 27-30
+// }
+
 //   `DELETE FROM employees WHERE id = ${}`
 // don't need to delete, just need to update.
-// }
