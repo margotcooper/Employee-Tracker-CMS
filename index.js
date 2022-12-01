@@ -304,3 +304,6 @@ async function updateEmployeeRole() {
 
 //   `DELETE FROM employees WHERE id = ${}`
 // don't need to delete, just need to update.
+
+//
+//to run - node index.js
